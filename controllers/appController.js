@@ -2,10 +2,17 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({extended: false});
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var express = require('express');
+var bodyParser = require('body-parser'); 
+
 
 module.exports = function(app){
 
   app.use(cookieParser());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.use(bodyParser.json());
   app.use(session({
     key:'user_login',
     secret:'login_secret',
@@ -21,8 +28,17 @@ module.exports = function(app){
 
   app.route('/login')
     .get(function(req, res){
-    res.render('login');
+      res.render('login');
+    })
+    .post(function(req, res){
+      var username = req.body.username;
+      var password = req.body.password;
+      if (username == "user" && password =="pass"){
+        req.session.user = "user";
+        res.redirect('/');
+      }
     });
+    
 
   
   
